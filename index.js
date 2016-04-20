@@ -2,17 +2,28 @@
 const tessel = require('tessel');
 const climatelib = require('climate-si7020');
 const climate = climatelib.use(tessel.port['A']);
+const pubnubSingleton = require('./util/pubnubSingleton');
 
 
 climate.on('ready', function () {
   console.log('Connected to climate module');
-
   // Loop forever
   setImmediate(function loop () {
-    climate.readTemperature('f', function (err, temp) {
-      climate.readHumidity(function (err, humid) {
-      console.log('Degrees:', temp.toFixed(4) + 'F', 'Humidity:', humid.toFixed(4) + '%RH');
-      setTimeout(loop, 300);
+    climate.readTemperature('c', (err, temp) => {
+      climate.readHumidity((err, humid) => {
+      // console.log(`humidity ${Math.round(humid)}`);
+      console.log(Math.round(temp));
+      pubnubSingleton.publish(
+        'tent:temperature',
+        Math.round(temp),
+        (callBackData) => {
+          console.log(callBackData);
+        },
+        (err) => {
+          console.log(JSON.stringify(err));
+        }
+      );
+      setTimeout(loop, 500);
       });
     });
   });
