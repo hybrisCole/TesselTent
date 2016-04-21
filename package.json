@@ -3,17 +3,18 @@
   "version": "0.0.0",
   "description": "Tessel project",
   "main": "index.js",
+  "dependencies": {
+    "climate-si7020": "0.1.1",
+    "pubnub": "3.14.5"
+  },
+  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": "www.github.com/tessel/t2-cli",
+  "repository": "https://github.com/hybrisCole/TesselTent.git",
   "keywords": [
     "Tessel"
   ],
   "license": "MIT",
-  "readme": "A bare bones Tessel 2 blinky script.",
-  "dependencies": {
-    "climate-si7020": "0.1.1",
-    "pubnub": "3.14.5"
-  }
+  "readme": "A bare bones Tessel 2 blinky script."
 }

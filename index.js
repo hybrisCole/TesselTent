@@ -12,10 +12,12 @@ climate.on('ready', function () {
     climate.readTemperature('c', (err, temp) => {
       climate.readHumidity((err, humid) => {
       // console.log(`humidity ${Math.round(humid)}`);
-      console.log(Math.round(temp));
       pubnubSingleton.publish(
-        'tent:temperature',
-        Math.round(temp),
+        'tent:climate',
+        {
+          temperature : Math.round(temp),
+          humidity    : Math.round(humid),
+        },
         (callBackData) => {
           console.log(callBackData);
         },
