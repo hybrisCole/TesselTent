@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "climate-si7020": "0.1.1",
+    "lodash": "4.11.1",
     "moment": "2.13.0",
     "pubnub": "3.14.5",
     "relay-mono": "0.1.3"
