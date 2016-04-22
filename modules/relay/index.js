@@ -5,7 +5,15 @@ const moment = require('moment');
 const _ = require('lodash');
 const relaylib = require('relay-mono');
 const relay = relaylib.use(tessel.port['B']);
-const lightHours  = [0, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
+let lightHours  = [0, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
+
+pubnubSingleton.subscribe('tent:lightHorus', (lightHoursResponse) => {
+  lightHours = lightHoursResponse;
+  console.log(lightHoursResponse);
+}, (err) => {
+  console.log(JSON.stringify(err));
+});
+
 exports.startReading = function startReading () {
   relay.on('ready', function relayReady () {
     let alreadyTurnedOn = false;
@@ -31,7 +39,7 @@ exports.startReading = function startReading () {
           });
         }
       }
-    }, 60 * 100);
+    }, 1000);
   });
   // When a relay channel is set, it emits the 'latch' event
   relay.on('latch', function(channel, value) {
