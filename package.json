@@ -10,9 +10,12 @@
     "pubnub": "3.14.5",
     "relay-mono": "0.1.3"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "babel-eslint": "6.0.3",
+    "eslint": "2.8.0"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint index.js modules/** util/**"
   },
   "repository": "https://github.com/hybrisCole/TesselTent.git",
   "keywords": [
