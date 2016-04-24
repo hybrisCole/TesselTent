@@ -28,7 +28,7 @@ exports.startReading = function startReading () {
               console.error(JSON.stringify(errPub));
             }
           );
-          setTimeout(loop, 500);
+          setTimeout(loop, 1000);
         });
       });
     });

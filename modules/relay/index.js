@@ -1,6 +1,7 @@
 'use strict';
 const tessel = require('tessel');
 const pubnubSingleton = require('../../util/pubnubSingleton');
+const db = require('../../util/db');
 const moment = require('moment');
 const _ = require('lodash');
 const relaylib = require('relay-mono');
@@ -39,6 +40,11 @@ exports.startReading = function startReading () {
         }
       }
     }, 1000);
+    setInterval(function dbLoop () {
+      db.saveLightSchedule({
+        light : alreadyTurnedOn,
+      });
+    }, 60 * 60 * 1000); // each hour
   });
   // When a relay channel is set, it emits the 'latch' event
   relay.on('latch', function latch (channel, value) {
