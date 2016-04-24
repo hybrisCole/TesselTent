@@ -1,3 +1,4 @@
+'use strict';
 const tessel = require('tessel');
 const pubnubSingleton = require('../../util/pubnubSingleton');
 const moment = require('moment');

@@ -1,3 +1,4 @@
+'use strict';
 const pubnub = require('pubnub');
 const pubnubRef = pubnub.init({
   publish_key   : 'pub-c-53c4cd7d-bc10-46c6-842b-36d270ea44f7',
