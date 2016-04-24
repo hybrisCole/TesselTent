@@ -1,6 +1,7 @@
 'use strict';
 const tessel = require('tessel');
 const pubnubSingleton = require('../../util/pubnubSingleton');
+const db = require('../../util/db');
 const climatelib = require('climate-si7020');
 const climate = climatelib.use(tessel.port.A);
 
@@ -11,12 +12,14 @@ exports.startReading = function startReading () {
     setImmediate(function loop () {
       climate.readTemperature('c', (errTemperature, temp) => {
         climate.readHumidity((errHumidity, humid) => {
+          const climateData = {
+            temperature : Math.round(temp),
+            humidity    : Math.round(humid),
+          };
+          db.saveClimate(climateData);
           pubnubSingleton.publish(
             'tent:climate',
-            {
-              temperature : Math.round(temp),
-              humidity    : Math.round(humid),
-            },
+            climateData,
             (callBackData) => {
               console.log(callBackData);
             },

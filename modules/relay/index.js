@@ -18,7 +18,6 @@ exports.startReading = function startReading () {
   relay.on('ready', function relayReady () {
     let alreadyTurnedOn = false;
     let alreadyTurnedOff = false;
-    console.log(new Date());
     console.log('Connected to relay module');
     setInterval(function toggle () {
       const currentHour = moment().subtract(6, 'hours').get('hour');
