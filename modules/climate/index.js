@@ -4,11 +4,13 @@ const pubnubSingleton = require('../../util/pubnubSingleton');
 const db = require('../../util/db');
 const climatelib = require('climate-si7020');
 const climate = climatelib.use(tessel.port.A);
+const DB_LOOP_DURATION = 60;
 
 exports.startReading = function startReading () {
   climate.on('ready', () => {
+    let temperatureSum = 0;
+    let humiditySum = 0;
     console.log('Connected to climate module');
-    // Loop forever
     setImmediate(function loop () {
       climate.readTemperature('c', (errTemperature, temp) => {
         climate.readHumidity((errHumidity, humid) => {
@@ -16,10 +18,9 @@ exports.startReading = function startReading () {
             temperature : Math.round(temp),
             humidity    : Math.round(humid),
           };
-          db.saveClimate(climateData);
-          pubnubSingleton.publish(
-            'tent:climate',
-            climateData,
+          temperatureSum += climateData.temperature;
+          humiditySum += climateData.humidity;
+          pubnubSingleton.publish('tent:climate', climateData,
             (callBackData) => {
               console.log(callBackData);
             },
@@ -30,6 +31,15 @@ exports.startReading = function startReading () {
           setTimeout(loop, 500);
         });
       });
+    });
+    setImmediate(function dbLoop () {
+      db.saveClimate({
+        temperature : Math.round(temperatureSum / DB_LOOP_DURATION),
+        humidity    : Math.round(humiditySum / DB_LOOP_DURATION),
+      });
+      temperatureSum = 0;
+      humiditySum = 0;
+      setTimeout(dbLoop, DB_LOOP_DURATION * 1000);
     });
   });
 
