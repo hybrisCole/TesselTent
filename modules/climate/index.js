@@ -10,6 +10,7 @@ exports.startReading = function startReading () {
   climate.on('ready', () => {
     let temperatureSum = 0;
     let humiditySum = 0;
+    let climateCounter = 0;
     console.log('Connected to climate module');
     setImmediate(function loop () {
       climate.readTemperature('c', (errTemperature, temp) => {
@@ -20,6 +21,7 @@ exports.startReading = function startReading () {
           };
           temperatureSum += climateData.temperature;
           humiditySum += climateData.humidity;
+          climateCounter++;
           pubnubSingleton.publish('tent:climate', climateData,
             (callBackData) => {
               console.log(callBackData);
@@ -34,9 +36,10 @@ exports.startReading = function startReading () {
     });
     setImmediate(function dbLoop () {
       db.saveClimate({
-        temperature : Math.round(temperatureSum / DB_LOOP_DURATION),
-        humidity    : Math.round(humiditySum / DB_LOOP_DURATION),
+        temperature : Math.round(temperatureSum / climateCounter),
+        humidity    : Math.round(humiditySum / climateCounter),
       });
+      climateCounter = 0;
       temperatureSum = 0;
       humiditySum = 0;
       setTimeout(dbLoop, DB_LOOP_DURATION * 1000);
