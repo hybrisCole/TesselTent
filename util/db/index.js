@@ -37,24 +37,28 @@ const wrapCurrentTime = (data) => {
 
 exports.saveClimate = function saveClimate (climateData) {
   onConnect((err, connection) => {
-    r.db(DB_CONFIG.db).table('climate').insert(wrapCurrentTime(climateData))
-    .run(connection, (errConnection) => {
-      if (errConnection) {
-        console.error(errConnection);
-      }
-      connection.close();
-    });
+    if (!err) {
+      r.db(DB_CONFIG.db).table('climate').insert(wrapCurrentTime(climateData))
+      .run(connection, (errConnection) => {
+        if (errConnection) {
+          console.error(errConnection);
+        }
+        connection.close();
+      });
+    }
   });
 };
 
 exports.saveLightSchedule = function saveLightSchedule (lightScheduleData) {
   onConnect((err, connection) => {
-    r.db(DB_CONFIG.db).table('lightSchedule').insert(wrapCurrentTime(lightScheduleData))
-    .run(connection, (errConnection) => {
-      if (errConnection) {
-        console.error(errConnection);
-      }
-      connection.close();
-    });
+    if (!err) {
+      r.db(DB_CONFIG.db).table('lightSchedule').insert(wrapCurrentTime(lightScheduleData))
+      .run(connection, (errConnection) => {
+        if (errConnection) {
+          console.error(errConnection);
+        }
+        connection.close();
+      });
+    }
   });
 };
