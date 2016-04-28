@@ -15,21 +15,23 @@ exports.startReading = function startReading () {
     setImmediate(function loop () {
       climate.readTemperature('c', (errTemperature, temp) => {
         climate.readHumidity((errHumidity, humid) => {
-          const climateData = {
-            temperature : Math.round(temp),
-            humidity    : Math.round(humid),
-          };
-          temperatureSum += climateData.temperature;
-          humiditySum += climateData.humidity;
-          climateCounter++;
-          pubnubSingleton.publish('tent:climate', climateData,
-            (callBackData) => {
-              console.log(callBackData);
-            },
-            (errPub) => {
-              console.error(JSON.stringify(errPub));
-            }
-          );
+          if (!errTemperature && !errHumidity) {
+            const climateData = {
+              temperature : Math.round(temp),
+              humidity    : Math.round(humid),
+            };
+            temperatureSum += climateData.temperature;
+            humiditySum += climateData.humidity;
+            climateCounter++;
+            pubnubSingleton.publish('tent:climate', climateData,
+              (callBackData) => {
+                console.log(callBackData);
+              },
+              (errPub) => {
+                console.error(JSON.stringify(errPub));
+              }
+            );
+          }
           setTimeout(loop, 1000);
         });
       });
