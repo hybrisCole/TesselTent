@@ -12,7 +12,7 @@ exports.startReading = function startReading () {
     let humiditySum = 0;
     let climateCounter = 0;
     console.log('Connected to climate module');
-    setImmediate(function loop () {
+    setInterval(function loop () {
       climate.readTemperature('c', (errTemperature, temp) => {
         climate.readHumidity((errHumidity, humid) => {
           if (!errTemperature && !errHumidity) {
@@ -31,12 +31,13 @@ exports.startReading = function startReading () {
                 console.error(JSON.stringify(errPub));
               }
             );
+          } else {
+            console.log(errTemperature, errHumidity);
           }
-          setTimeout(loop, 1000);
         });
       });
-    });
-    setImmediate(function dbLoop () {
+    }, 1000);
+    setInterval(function dbLoop () {
       db.saveClimate({
         temperature : Math.round(temperatureSum / climateCounter),
         humidity    : Math.round(humiditySum / climateCounter),
@@ -44,8 +45,7 @@ exports.startReading = function startReading () {
       climateCounter = 0;
       temperatureSum = 0;
       humiditySum = 0;
-      setTimeout(dbLoop, DB_LOOP_DURATION * 1000);
-    });
+    }, DB_LOOP_DURATION * 1000);
   });
 
   climate.on('error', function climateError (errClimate) {
