@@ -1,54 +1,30 @@
-'use strict';
+// eslint-disable-next-line node/no-unpublished-require, node/no-missing-require
 const tessel = require('tessel');
-const pubnubSingleton = require('../../util/pubnubSingleton');
-const db = require('../../util/db');
 const climatelib = require('climate-si7020');
 const climate = climatelib.use(tessel.port.A);
-const DB_LOOP_DURATION = 60;
+const pubnubSingleton = require('../../util/pubnubSingleton');
+const moment = require('moment');
+const Rx = require('rxjs/Rx');
+
+const climateInterval = Rx.Observable.interval(5000);
+const readTemperature = (err, temp) => {
+  pubnubSingleton.publish('tent:climate', {
+    temperature : temp.toFixed(2),
+    time        : (moment().subtract(6, 'hours')).toISOString(),
+  });
+};
+
+const climateError = (errClimate) => {
+  // eslint-disable-next-line no-console
+  console.error(errClimate);
+};
 
 exports.startReading = function startReading () {
   climate.on('ready', () => {
-    let temperatureSum = 0;
-    let humiditySum = 0;
-    let climateCounter = 0;
-    console.log('Connected to climate module');
-    setInterval(function loop () {
-      climate.readTemperature('c', (errTemperature, temp) => {
-        climate.readHumidity((errHumidity, humid) => {
-          if (!errTemperature && !errHumidity) {
-            const climateData = {
-              temperature : Math.round(temp),
-              humidity    : Math.round(humid),
-            };
-            temperatureSum += climateData.temperature;
-            humiditySum += climateData.humidity;
-            climateCounter++;
-            pubnubSingleton.publish('tent:climate', climateData,
-              (callBackData) => {
-                console.log(callBackData);
-              },
-              (errPub) => {
-                console.error(JSON.stringify(errPub));
-              }
-            );
-          } else {
-            console.log(errTemperature, errHumidity);
-          }
-        });
-      });
-    }, 1000);
-    setInterval(function dbLoop () {
-      db.saveClimate({
-        temperature : Math.round(temperatureSum / climateCounter),
-        humidity    : Math.round(humiditySum / climateCounter),
-      });
-      climateCounter = 0;
-      temperatureSum = 0;
-      humiditySum = 0;
-    }, DB_LOOP_DURATION * 1000);
+    climate.setHeater(true);
+    climateInterval.subscribe(() => {
+      climate.readTemperature('c', readTemperature);
+    });
   });
-
-  climate.on('error', function climateError (errClimate) {
-    console.error(errClimate);
-  });
+  climate.on('error', climateError);
 };

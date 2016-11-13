@@ -1,20 +1,23 @@
 {
   "env": {
     "browser": false,
-    "node": true
+    "node": true,
+    "es6": true
   },
+  "plugins": [
+    "node",
+  ],
+  "extends": ["eslint:recommended", "plugin:node/recommended"],
   "parser": "babel-eslint",
   "parserOptions": {
       "ecmaVersion": 7,
-      "sourceType": "script",
   },
-  "extends": ["eslint:recommended"],
   "rules": {
     /**
    * Strict mode
    */
     // babel inserts "use strict"; for us
-    "strict": [2, "safe"],          // http://eslint.org/docs/rules/strict
+    "strict": [2, "never"],          // http://eslint.org/docs/rules/strict
   /**
    * ES6
    */
@@ -35,7 +38,7 @@
    */
     "comma-dangle": [2, "always-multiline"],    // http://eslint.org/docs/rules/comma-dangle
     "no-cond-assign": [2, "always"], // http://eslint.org/docs/rules/no-cond-assign
-    "no-console": 0,                 // http://eslint.org/docs/rules/no-console
+    "no-console": 1,                 // http://eslint.org/docs/rules/no-console
     "no-debugger": 1,                // http://eslint.org/docs/rules/no-debugger
     "no-alert": 1,                   // http://eslint.org/docs/rules/no-alert
     "no-constant-condition": 1,      // http://eslint.org/docs/rules/no-constant-condition
@@ -148,6 +151,6 @@
     "spaced-comment": [2, "always",  {// http://eslint.org/docs/rules/spaced-comment
       "exceptions": ["-", "+"],
       "markers": ["=", "!"]           // space here to support sprockets directives
-    }],
+    }]
   }
 }
