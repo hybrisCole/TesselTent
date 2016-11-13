@@ -5,10 +5,9 @@ const moment = require('moment');
 const _ = require('lodash');
 const relaylib = require('relay-mono');
 const Rx = require('rxjs/Rx');
-
 const relayInterval = Rx.Observable.interval(1000);
 const relay = relaylib.use(tessel.port.B);
-
+const cbRelay = () => {};
 exports.startReading = function startReading () {
   const hours = {
     light : [],
@@ -22,9 +21,9 @@ exports.startReading = function startReading () {
     relayInterval.subscribe(() => {
       const currentHour = moment().subtract(6, 'hours').get('hour');
       if (_.includes(hours.light, currentHour)) {
-        relay.turnOn(1);
+        relay.turnOn(1, cbRelay);
       } else {
-        relay.turnOff(1);
+        relay.turnOff(1, cbRelay);
       }
     });
   });
