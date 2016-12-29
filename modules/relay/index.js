@@ -30,7 +30,9 @@ exports.startReading = function startReading () {
   });
   relay.on('ready', function relayReady () {
     relayInterval.subscribe(() => {
-      const currentHour = moment().subtract(6, 'hours').get('hour');
+      const currentHour = moment().get('hour');
+      // eslint-disable-next-line no-console
+      console.log(hours.light, currentHour);
       if (_.includes(hours.light, currentHour)) {
         relay.turnOn(1, cbRelay);
       } else {
