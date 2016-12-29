@@ -4,21 +4,21 @@
   "description": "Tessel project",
   "main": "index.js",
   "engines": {
-    "node": "7.1.0"
+    "node": "7.3.0"
   },
   "dependencies": {
     "climate-si7020": "0.1.1",
-    "lodash": "4.16.6",
-    "moment": "2.16.0",
-    "pubnub": "4.2.5",
+    "lodash": "4.17.3",
+    "moment": "2.17.1",
+    "pubnub": "4.3.3",
     "relay-mono": "0.1.3",
-    "rxjs": "5.0.0-rc.2"
+    "rxjs": "5.0.2"
   },
   "devDependencies": {
-    "babel-eslint": "7.1.0",
-    "eslint": "3.10.0",
-    "eslint-plugin-node": "3.0.3",
-    "pre-commit": "1.1.3"
+    "babel-eslint": "7.1.1",
+    "eslint": "3.12.2",
+    "eslint-plugin-node": "3.0.5",
+    "pre-commit": "1.2.2"
   },
   "scripts": {
     "lint": "eslint index.js modules/** util/**"
@@ -29,5 +29,5 @@
     "Tessel"
   ],
   "license": "MIT",
-  "readme": "A bare bones Tessel 2 blinky script."
+  "readme": "Tessel Project that reads environment temperature and switches a power strip via PubNub."
 }

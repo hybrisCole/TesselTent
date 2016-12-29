@@ -12,6 +12,17 @@ exports.startReading = function startReading () {
   const hours = {
     light : [],
   };
+  pubnubSingleton.history({
+    count   : 1,
+    channel : 'tent:lightHorus',
+  }, (status, response) => {
+    if (status.statusCode === 200) {
+      const lastHours = response.messages[0].entry;
+      if (lastHours.length) {
+        hours.light = lastHours;
+      }
+    }
+  });
   pubnubSingleton.subscribe('tent:lightHorus', {
     message : (msg) => {
       hours.light = msg.message;

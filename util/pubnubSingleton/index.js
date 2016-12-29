@@ -23,3 +23,7 @@ exports.unsuscribe = function unsuscribe (channel) {
     channel : channel,
   });
 };
+
+exports.history = function history (opts, callback) {
+  pubnubRef.history(opts, callback);
+};
