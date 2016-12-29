@@ -3,14 +3,14 @@ const tessel = require('tessel');
 const climatelib = require('climate-si7020');
 const climate = climatelib.use(tessel.port.A);
 const pubnubSingleton = require('../../util/pubnubSingleton');
-const moment = require('moment');
+const time = require('../../util/time');
 const Rx = require('rxjs/Rx');
 
 const climateInterval = Rx.Observable.interval(5000);
 const readTemperature = (err, temp) => {
   pubnubSingleton.publish('tent:climate', {
     temperature : temp.toFixed(2),
-    time        : (moment().subtract(6, 'hours')).toISOString(),
+    time        : time.get().toISOString(),
   });
 };
 

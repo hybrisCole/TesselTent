@@ -1,7 +1,7 @@
 // eslint-disable-next-line node/no-unpublished-require, node/no-missing-require
 const tessel = require('tessel');
 const pubnubSingleton = require('../../util/pubnubSingleton');
-const moment = require('moment');
+const time = require('../../util/time');
 const _ = require('lodash');
 const relaylib = require('relay-mono');
 const Rx = require('rxjs/Rx');
@@ -30,7 +30,7 @@ exports.startReading = function startReading () {
   });
   relay.on('ready', function relayReady () {
     relayInterval.subscribe(() => {
-      const currentHour = moment().get('hour');
+      const currentHour = time.get().get('hour');
       // eslint-disable-next-line no-console
       console.log(hours.light, currentHour);
       if (_.includes(hours.light, currentHour)) {
