@@ -12,17 +12,19 @@ exports.startReading = function startReading () {
   const hours = {
     light : [],
   };
-  pubnubSingleton.history({
-    count   : 1,
-    channel : 'tent:lightHorus',
-  }, (status, response) => {
-    if (status.statusCode === 200) {
-      const lastHours = response.messages[0].entry;
-      if (lastHours.length) {
-        hours.light = lastHours;
+  setTimeout(() => {
+    pubnubSingleton.history({
+      count   : 1,
+      channel : 'tent:lightHorus',
+    }, (status, response) => {
+      if (status.statusCode === 200) {
+        const lastHours = response.messages[0].entry;
+        if (lastHours.length) {
+          hours.light = lastHours;
+        }
       }
-    }
-  });
+    });
+  }, 5000);
   pubnubSingleton.subscribe('tent:lightHorus', {
     message : (msg) => {
       hours.light = msg.message;
@@ -32,7 +34,11 @@ exports.startReading = function startReading () {
     relayInterval.subscribe(() => {
       const currentHour = time.get().get('hour');
       // eslint-disable-next-line no-console
-      console.log(hours.light, currentHour);
+      pubnubSingleton.publish('tent:hourData', {
+        lights : hours.light,
+        isOn   : _.includes(hours.light, currentHour),
+        time   : time.get().toISOString(),
+      });
       if (_.includes(hours.light, currentHour)) {
         relay.turnOn(1, cbRelay);
       } else {

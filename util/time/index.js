@@ -13,6 +13,7 @@ const requestTime = function requestTime () {
     currentTime = moment(response.data.dateString).subtract(6, 'hours');
     internalStartDiff = moment();
   }).catch((err) => {
+    requestTime();
     // eslint-disable-next-line no-console
     console.log(err);
   });
