@@ -7,10 +7,10 @@ const timeInterval = Rx.Observable.interval(1000 * 30);
 let currentTime = moment();
 let internalStartDiff = moment();
 const requestTime = function requestTime () {
-  axios.get('http://www.timeapi.org/utc/now.json').then((response) => {
+  axios.get('http://api.timezonedb.com/v2/get-time-zone?key=K7G5WXGM2Q5B&by=zone&zone=America/Costa_Rica&format=json').then((response) => {
     // eslint-disable-next-line no-console
     // Costa Rica time
-    currentTime = moment(response.data.dateString).subtract(6, 'hours');
+    currentTime = moment.unix(response.data.timestamp);
     internalStartDiff = moment();
   }).catch((err) => {
     requestTime();
