@@ -3,7 +3,7 @@
 const axios = require('axios');
 const moment = require('moment');
 const Rx = require('rxjs/Rx');
-const timeInterval = Rx.Observable.interval(1000 * 30);
+const timeInterval = Rx.Observable.interval(1000);
 let currentTime = moment();
 let internalStartDiff = moment();
 const requestTime = function requestTime () {
