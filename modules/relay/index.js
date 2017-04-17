@@ -8,6 +8,8 @@ const Rx = require('rxjs/Rx');
 const relayInterval = Rx.Observable.interval(1000);
 const relay = relaylib.use(tessel.port.B);
 const cbRelay = () => {};
+const WATERING_RELAY = 1;
+const LIGHT_RELAY = 2;
 const waterData = {info : {}};
 const hours = {
   light : [],
@@ -53,9 +55,9 @@ const performWatering = (currentTime) => {
   const startWatering = _.cloneDeep(currentTime).minutes(5).seconds(0);
   const endWatering = _.cloneDeep(currentTime).minutes(5).seconds(duration.seconds);
   if (_.inRange(currentTime.valueOf(), startWatering.valueOf(), endWatering.valueOf())) {
-    relay.turnOn(2, cbRelay);
+    relay.turnOn(WATERING_RELAY, cbRelay);
   } else {
-    relay.turnOff(2, cbRelay);
+    relay.turnOff(WATERING_RELAY, cbRelay);
   }
 };
 
@@ -77,9 +79,9 @@ const relayReady = () => {
       time   : currentTime.toISOString(),
     });
     if (_.includes(hours.light, currentHour)) {
-      relay.turnOn(1, cbRelay);
+      relay.turnOn(LIGHT_RELAY, cbRelay);
     } else {
-      relay.turnOff(1, cbRelay);
+      relay.turnOff(LIGHT_RELAY, cbRelay);
     }
   });
 };
